@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "Health.h"
 #include "MGP_2526Character.generated.h"
 
 class USpringArmComponent;
@@ -48,6 +49,22 @@ protected:
 	/** Mouse Look Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* MouseLookAction;
+
+	virtual void BeginPlay() override;
+
+	/** Health + Shield component */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true")) 
+	UHealth* HealthComponent;
+
+	// Damage / event handlers
+	UFUNCTION()
+	void HandleAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
+
+	UFUNCTION()
+	void OnShieldBrokeHandler();
+
+	UFUNCTION()
+	void OnDiedHandler();
 
 public:
 
