@@ -48,9 +48,9 @@ AMGP_2526Character::AMGP_2526Character()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
-
-	// Create Health component
+	
 	HealthComponent = CreateDefaultSubobject<UHealth>(TEXT("HealthComponent"));
+
 }
 
 void AMGP_2526Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -135,13 +135,14 @@ void AMGP_2526Character::DoJumpEnd()
 	StopJumping();
 }
 
-void AMGP_2526Character::BeginPlay() 
+void AMGP_2526Character::BeginPlay()
 {
 	Super::BeginPlay();
-	// Bind actor damage to forward to the Health component
+
+	// Forward engine damage events to our handler
 	OnTakeAnyDamage.AddDynamic(this, &AMGP_2526Character::HandleAnyDamage);
 
-	// Bind component events (if component exists)
+	// Bind health component events
 	if (HealthComponent)
 	{
 		HealthComponent->OnShieldBroke.AddDynamic(this, &AMGP_2526Character::OnShieldBrokeHandler);
@@ -149,33 +150,30 @@ void AMGP_2526Character::BeginPlay()
 	}
 }
 
-void AMGP_2526Character::HandleAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
+void AMGP_2526Character::HandleAnyDamage(AActor* DamagedActor, float Damage,
+	const UDamageType* DamageType,
+	AController* InstigatedBy, AActor* DamageCauser)
 {
 	if (HealthComponent && Damage > 0.f)
 	{
-		const int32 IntDamage = FMath::RoundToInt(Damage);
-		HealthComponent->TakeDamage(IntDamage);
-
+		HealthComponent->TakeDamage(FMath::RoundToInt(Damage));
 	}
 }
 
 void AMGP_2526Character::OnShieldBrokeHandler()
 {
-	UE_LOG(LogTemp, Log, TEXT("%s: Shield broke"), *GetName());
-	//play a sound
+	UE_LOG(LogTemp, Warning, TEXT("%s: Shield broke"), *GetName());
 }
 
 void AMGP_2526Character::OnDiedHandler()
 {
-	UE_LOG(LogTemp, Log, TEXT("%s: Died"), *GetName());
+	UE_LOG(LogTemp, Warning, TEXT("%s: Died"), *GetName());
 
 	GetCharacterMovement()->DisableMovement();
 
-	if (AController* C = GetController())
+	if (APlayerController* PC = Cast<APlayerController>(GetController()))
 	{
-		if (APlayerController* PC = Cast<APlayerController>(C))
-		{
-			DisableInput(PC);
-		}
+		DisableInput(PC);
 	}
 }
+

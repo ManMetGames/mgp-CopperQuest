@@ -31,8 +31,19 @@ class AMGP_2526Character : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
-	
+
 protected:
+
+	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void HandleAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
+
+	UFUNCTION()
+	void OnShieldBrokeHandler();
+
+	UFUNCTION()
+	void OnDiedHandler();
 
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")
@@ -50,21 +61,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* MouseLookAction;
 
-	virtual void BeginPlay() override;
-
-	/** Health + Shield component */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true")) 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UHealth* HealthComponent;
-
-	// Damage / event handlers
-	UFUNCTION()
-	void HandleAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
-
-	UFUNCTION()
-	void OnShieldBrokeHandler();
-
-	UFUNCTION()
-	void OnDiedHandler();
 
 public:
 
