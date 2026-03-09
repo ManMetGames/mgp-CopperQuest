@@ -78,6 +78,12 @@ public:
     UFUNCTION(BlueprintPure, Category = "Health")
     FORCEINLINE int32 GetShield() const { return Shield; }
 
+    UFUNCTION(BlueprintPure, Category = "Health")
+    float GetHealthPercent() const { return (float)Health / (float)MaxHealth; }
+
+    UFUNCTION(BlueprintPure, Category = "Health")
+    float GetShieldPercent() const { return (float)Shield / (float)MaxShield; }
+
 protected:
     /** Internal helper to clamp values and handle death/shield-break logic */
     void ClampAndBroadcast();
