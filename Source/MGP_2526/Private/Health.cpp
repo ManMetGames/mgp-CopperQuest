@@ -20,7 +20,7 @@ void UHealth::BeginPlay()
     Shield = FMath::Clamp(Shield, 0, MaxShield);
 }
 
-void UHealth::TakeDamage(int32 DamageAmount)
+void UHealth::TakeDamage(int DamageAmount)
 {
     if (DamageAmount <= 0)
     {
@@ -47,7 +47,7 @@ void UHealth::TakeDamage(int32 DamageAmount)
     ClampAndBroadcast();
 }
 
-void UHealth::Heal(int32 HealAmount)
+void UHealth::Heal(int HealAmount)
 {
     if (HealAmount <= 0)
     {
@@ -58,7 +58,7 @@ void UHealth::Heal(int32 HealAmount)
     Health = FMath::Clamp(Health, 0, MaxHealth);
 }
 
-void UHealth::RestoreShield(int32 ShieldAmount)
+void UHealth::RestoreShield(int ShieldAmount)
 {
     if (ShieldAmount <= 0)
     {
@@ -75,7 +75,7 @@ void UHealth::RestoreFully()
     Shield = MaxShield;
 }
 
-void UHealth::SetMaxValues(int32 NewMaxHealth, int32 NewMaxShield, bool bResetCurrent)
+void UHealth::SetMaxValues(int NewMaxHealth, int NewMaxShield, bool bResetCurrent)
 {
     MaxHealth = FMath::Max(1, NewMaxHealth);
     MaxShield = FMath::Max(0, NewMaxShield);
@@ -95,7 +95,7 @@ void UHealth::SetMaxValues(int32 NewMaxHealth, int32 NewMaxShield, bool bResetCu
 void UHealth::ClampAndBroadcast()
 {
     // Clamp values
-    const int32 PrevShield = Shield;
+    const int PrevShield = Shield;
     Health = FMath::Clamp(Health, 0, MaxHealth);
     Shield = FMath::Clamp(Shield, 0, MaxShield);
 
