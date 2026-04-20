@@ -25,11 +25,11 @@ public:
 
     /** Maximum health value (editable in editor) */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health|Stats")
-    int MaxHealth = 75;
+    int MaxHealth = 80;
 
     /** Current health (visible in editor/runtime) */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health|Stats")
-    int Health = 75;
+    int Health = 80;
 
     /** Maximum shield value (editable in editor) */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health|Shield")

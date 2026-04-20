@@ -22,7 +22,7 @@ protected:
 	UStaticMeshComponent* CubeMesh;
 
 	UPROPERTY(EditAnywhere, Category = "Damage")
-	int32 DamageAmount = 20;
+	int32 DamageAmount = 10;
 
 	UFUNCTION()
 	void OnCubeOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
