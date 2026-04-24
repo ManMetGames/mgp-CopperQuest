@@ -7,6 +7,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FYouDied);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FShieldBroke);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDamaged);
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class MGP_2526_API UHealth : public UActorComponent
@@ -83,6 +84,9 @@ public:
 
     UFUNCTION(BlueprintPure, Category = "Health")
     float GetShieldPercent() const { return Shield; }
+
+    UPROPERTY(BlueprintAssignable, Category = "Health|Events")
+    FDamaged OnDamaged;
 
 protected:
     /** Internal helper to clamp values and handle death/shield-break logic */

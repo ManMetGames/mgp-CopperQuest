@@ -43,6 +43,7 @@ void UHealth::TakeDamage(int DamageAmount)
     {
         Health -= DamageAmount;
     }
+    OnDamaged.Broadcast();
 
     ClampAndBroadcast();
 }
