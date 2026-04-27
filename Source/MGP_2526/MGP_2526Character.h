@@ -61,11 +61,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* MouseLookAction;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UHealth* HealthComponent;
+	
 
 public:
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UHealth* HealthComponent;
 	/** Constructor */
 	AMGP_2526Character();	
 

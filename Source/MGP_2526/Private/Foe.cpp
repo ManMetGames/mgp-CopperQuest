@@ -46,6 +46,6 @@ void AFoe::OnCubeOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor
 		Health->TakeDamage(DamageAmount);
 		return;
 	}
-
+	// this is strange
 	UGameplayStatics::ApplyDamage(OtherActor, DamageAmount, nullptr, this, nullptr);
 }
