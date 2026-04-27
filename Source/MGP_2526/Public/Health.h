@@ -88,6 +88,21 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Health|Events")
     FDamaged OnDamaged;
 
+    //FTimerHandle ShieldRegenDelayHandle;
+    //FTimerHandle ShieldRegenTickHandle;
+
+    //UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health|Shield Regen")
+    //float ShieldRegenDelay = 5.f;
+
+    //UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health|Shield Regen")
+    //float ShieldRegenRate = 0.1f; // how often to regen
+
+    //UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health|Shield Regen")
+    //int ShieldRegenAmount = 1; // how much per tick
+
+    //void StartShieldRegen();
+    //void RegenShieldTick();
+
 protected:
     /** Internal helper to clamp values and handle death/shield-break logic */
     void ClampAndBroadcast();

@@ -45,6 +45,12 @@ void UHealth::TakeDamage(int DamageAmount)
     }
     OnDamaged.Broadcast();
 
+    // Reset regen timer whenever damage is taken
+    //GetWorld()->GetTimerManager().ClearTimer(ShieldRegenDelayHandle);
+    //GetWorld()->GetTimerManager().ClearTimer(ShieldRegenTickHandle);
+
+   // GetWorld()->GetTimerManager().SetTimer(ShieldRegenDelayHandle, this, &UHealth::StartShieldRegen, ShieldRegenDelay, false);
+
     ClampAndBroadcast();
 }
 
@@ -114,3 +120,23 @@ void UHealth::ClampAndBroadcast()
         UE_LOG(LogTemp, Log, TEXT("%s: Died"), *GetOwner()->GetName());
     }
 }
+
+//void UHealth::StartShieldRegen()
+//{
+    /// Only regen if shield is not full
+    //if (Shield < MaxShield)
+    //{
+        //GetWorld()->GetTimerManager().SetTimer(ShieldRegenTickHandle, this, &UHealth::RegenShieldTick,  ShieldRegenRate, true);
+    //}
+//}
+
+//void UHealth::RegenShieldTick()
+//{
+    //Shield = FMath::Clamp(Shield + ShieldRegenAmount, 0, MaxShield);
+
+    // Stop when full
+    //if (Shield >= MaxShield)
+    //{
+        //GetWorld()->GetTimerManager().ClearTimer(ShieldRegenTickHandle);
+   //}
+//}
