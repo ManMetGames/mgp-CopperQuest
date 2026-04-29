@@ -95,6 +95,9 @@ public:
     float ShieldRegenDelay = 5.f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health|Shield Regen")
+    float ShieldBreakRegenDelay = 8.f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health|Shield Regen")
     float ShieldRegenRate = 0.1f; // how often to regen
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health|Shield Regen")

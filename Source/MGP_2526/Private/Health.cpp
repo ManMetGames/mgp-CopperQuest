@@ -49,7 +49,14 @@ void UHealth::TakeDamage(int DamageAmount)
     GetWorld()->GetTimerManager().ClearTimer(ShieldRegenDelayHandle);
     GetWorld()->GetTimerManager().ClearTimer(ShieldRegenTickHandle);
 
-    GetWorld()->GetTimerManager().SetTimer(ShieldRegenDelayHandle, this, &UHealth::StartShieldRegen, ShieldRegenDelay, false);
+    float DelayToUse = ShieldRegenDelay;
+
+    // If shield was >0 and now is 0, use the longer delay
+    if (bShieldWasPositive && Shield == 0)
+    {
+        DelayToUse = ShieldBreakRegenDelay;
+    }
+    GetWorld()->GetTimerManager().SetTimer(ShieldRegenDelayHandle, this, &UHealth::StartShieldRegen, DelayToUse, false);
 
     ClampAndBroadcast();
 }
