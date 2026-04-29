@@ -48,6 +48,9 @@ AMGP_2526Character::AMGP_2526Character()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+	
+	HealthComponent = CreateDefaultSubobject<UHealth>(TEXT("HealthComponent"));
+
 }
 
 void AMGP_2526Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -131,3 +134,46 @@ void AMGP_2526Character::DoJumpEnd()
 	// signal the character to stop jumping
 	StopJumping();
 }
+
+void AMGP_2526Character::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// Forward engine damage events to our handler
+	OnTakeAnyDamage.AddDynamic(this, &AMGP_2526Character::HandleAnyDamage);
+
+	// Bind health component events
+	if (HealthComponent)
+	{
+		HealthComponent->OnShieldBroke.AddDynamic(this, &AMGP_2526Character::OnShieldBrokeHandler);
+		HealthComponent->OnDied.AddDynamic(this, &AMGP_2526Character::OnDiedHandler);
+	}
+}
+
+void AMGP_2526Character::HandleAnyDamage(AActor* DamagedActor, float Damage,
+	const UDamageType* DamageType,
+	AController* InstigatedBy, AActor* DamageCauser)
+{
+	if (HealthComponent && Damage > 0.f)
+	{
+		HealthComponent->TakeDamage(FMath::RoundToInt(Damage));
+	}
+}
+
+void AMGP_2526Character::OnShieldBrokeHandler()
+{
+	UE_LOG(LogTemp, Warning, TEXT("%s: Shield broke"), *GetName());
+}
+
+void AMGP_2526Character::OnDiedHandler()
+{
+	UE_LOG(LogTemp, Warning, TEXT("%s: Died"), *GetName());
+
+	GetCharacterMovement()->DisableMovement();
+
+	if (APlayerController* PC = Cast<APlayerController>(GetController()))
+	{
+		DisableInput(PC);
+	}
+}
+
