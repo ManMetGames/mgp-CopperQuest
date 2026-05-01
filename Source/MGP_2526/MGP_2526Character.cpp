@@ -51,6 +51,11 @@ AMGP_2526Character::AMGP_2526Character()
 	
 	HealthComponent = CreateDefaultSubobject<UHealth>(TEXT("HealthComponent"));
 
+	// player Audio Component
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
+	AudioComponent->SetupAttachment(RootComponent);
+	AudioComponent->bAutoActivate = false;
+
 }
 
 void AMGP_2526Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -163,6 +168,17 @@ void AMGP_2526Character::HandleAnyDamage(AActor* DamagedActor, float Damage,
 void AMGP_2526Character::OnShieldBrokeHandler()
 {
 	UE_LOG(LogTemp, Warning, TEXT("%s: Shield broke"), *GetName());
+	if (AudioComponent && LowHealthSound)
+	{
+		AudioComponent->SetSound(LowHealthSound);
+		AudioComponent->Play();
+
+		//to test if this is being called (doesnt seem like it is)
+		UE_LOG(LogTemp, Warning, TEXT("AudioComponent Valid: %s | Sound Valid: %s | IsPlaying: %s"),
+			AudioComponent ? TEXT("YES") : TEXT("NO"),
+			LowHealthSound ? TEXT("YES") : TEXT("NO"),
+			AudioComponent && AudioComponent->IsPlaying() ? TEXT("YES") : TEXT("NO"));
+	}
 }
 
 void AMGP_2526Character::OnDiedHandler()

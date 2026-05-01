@@ -3,6 +3,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Health.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FYouDied);

@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "Health.h"
+#include "Sound/SoundBase.h"
+#include "Components/AudioComponent.h"
 #include "MGP_2526Character.generated.h"
 
 class USpringArmComponent;
@@ -69,6 +71,15 @@ public:
 	/** Constructor */
 	AMGP_2526Character();	
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio", meta = (AllowPrivateAccess = "true"))
+	UAudioComponent* AudioComponent;
+
+	// Audio cues to be played for getting hit
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* LowHealthSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* ShieldRegenSound;
 protected:
 
 	/** Initialize input action bindings */
