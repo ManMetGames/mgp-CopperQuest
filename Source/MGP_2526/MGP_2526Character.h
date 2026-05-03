@@ -74,7 +74,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio", meta = (AllowPrivateAccess = "true"))
 	UAudioComponent* AudioComponent;
 
-	// Audio cues to be played for getting hit
+	// Audio cues to be played for when shield breaks/regens
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
 	USoundBase* LowHealthSound;
 
