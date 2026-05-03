@@ -27,8 +27,11 @@ void UHealth::TakeDamage(int DamageAmount)
         return;
     }
 
+    // Capture previous shield before applying damage
+    const int PrevShield = Shield;
+
     // Track whether shield was >0 before applying damage to detect shield break
-    const bool bShieldWasPositive = (Shield > 0);
+    const bool bShieldWasPositive = (PrevShield > 0);
 
     if (!bBypassShield && Shield > 0)
     {
@@ -58,7 +61,7 @@ void UHealth::TakeDamage(int DamageAmount)
     }
     GetWorld()->GetTimerManager().SetTimer(ShieldRegenDelayHandle, this, &UHealth::StartShieldRegen, DelayToUse, false);
 
-    ClampAndBroadcast();
+    ClampAndBroadcast(PrevShield);
 }
 
 void UHealth::Heal(int HealAmount)
@@ -106,10 +109,9 @@ void UHealth::SetMaxValues(int NewMaxHealth, int NewMaxShield, bool bResetCurren
     }
 }
 
-void UHealth::ClampAndBroadcast()
+void UHealth::ClampAndBroadcast(int PrevShield)
 {
     // Clamp values
-    const int PrevShield = Shield;
     Health = FMath::Clamp(Health, 0, MaxHealth);
     Shield = FMath::Clamp(Shield, 0, MaxShield);
 

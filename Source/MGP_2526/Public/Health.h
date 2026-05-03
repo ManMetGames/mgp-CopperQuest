@@ -109,5 +109,5 @@ public:
 
 protected:
     /** Internal helper to clamp values and handle death/shield-break logic */
-    void ClampAndBroadcast();
+    void ClampAndBroadcast(int PrevShield);
 };
