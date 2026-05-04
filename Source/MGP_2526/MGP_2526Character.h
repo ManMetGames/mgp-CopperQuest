@@ -47,6 +47,9 @@ protected:
 	UFUNCTION()
 	void OnDiedHandler();
 
+	UFUNCTION()
+	void OnShieldRegenStartedHandler();
+
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* JumpAction;

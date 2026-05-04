@@ -9,6 +9,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FYouDied);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FShieldBroke);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDamaged);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FShieldRegenStarted);
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class MGP_2526_API UHealth : public UActorComponent
@@ -106,6 +107,10 @@ public:
 
     void StartShieldRegen();
     void RegenShieldTick();
+
+    /** Event broadcast when shield starts regenerating */
+    UPROPERTY(BlueprintAssignable, Category = "Health|Events")
+    FShieldRegenStarted OnShieldRegenStarted;
 
 protected:
     /** Internal helper to clamp values and handle death/shield-break logic */

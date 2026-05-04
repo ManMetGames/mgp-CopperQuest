@@ -132,10 +132,18 @@ void UHealth::ClampAndBroadcast(int PrevShield)
 
 void UHealth::StartShieldRegen()
 {
-    /// Only regen if shield is not full
+    /// Only regen if shield is not full and not already regenerating
     if (Shield < MaxShield)
     {
-        GetWorld()->GetTimerManager().SetTimer(ShieldRegenTickHandle, this, &UHealth::RegenShieldTick,  ShieldRegenRate, true);
+        FTimerManager& TM = GetWorld()->GetTimerManager();
+        if (!TM.IsTimerActive(ShieldRegenTickHandle))
+        {
+            // Broadcast that regen is starting
+            OnShieldRegenStarted.Broadcast();
+
+            // Start the tick timer
+            TM.SetTimer(ShieldRegenTickHandle, this, &UHealth::RegenShieldTick, ShieldRegenRate, true);
+        }
     }
 }
 

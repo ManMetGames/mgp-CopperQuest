@@ -152,6 +152,8 @@ void AMGP_2526Character::BeginPlay()
 	{
 		HealthComponent->OnShieldBroke.AddDynamic(this, &AMGP_2526Character::OnShieldBrokeHandler);
 		HealthComponent->OnDied.AddDynamic(this, &AMGP_2526Character::OnDiedHandler);
+		//Bind shield regen started
+		HealthComponent->OnShieldRegenStarted.AddDynamic(this, &AMGP_2526Character::OnShieldRegenStartedHandler);
 	}
 }
 
@@ -190,6 +192,18 @@ void AMGP_2526Character::OnDiedHandler()
 	if (APlayerController* PC = Cast<APlayerController>(GetController()))
 	{
 		DisableInput(PC);
+	}
+}
+
+void AMGP_2526Character::OnShieldRegenStartedHandler()
+{
+	UE_LOG(LogTemp, Log, TEXT("%s: Shield regen started"), *GetName());
+
+	if (AudioComponent && ShieldRegenSound)
+	{
+		AudioComponent->Stop();
+		AudioComponent->SetSound(ShieldRegenSound);
+		AudioComponent->Play();
 	}
 }
 
