@@ -50,7 +50,7 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Health|Events")
     FYouDied OnDied;
 
-    /** Event broadcast when shield breaks (goes from >0 to 0) */
+    /** Event broadcast when shield breaks (goes to 0) */
     UPROPERTY(BlueprintAssignable, Category = "Health|Events")
     FShieldBroke OnShieldBroke;
 
@@ -58,17 +58,6 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Health")
     void TakeDamage(int DamageAmount);
 
-    /** Heal health by amount (does not affect shield). Clamped to MaxHealth. */
-    UFUNCTION(BlueprintCallable, Category = "Health")
-    void Heal(int HealAmount);
-
-    /** Restore shield by amount. Clamped to MaxShield. */
-    UFUNCTION(BlueprintCallable, Category = "Health")
-    void RestoreShield(int ShieldAmount);
-
-    /** Fully restore both health and shield to their max values. */
-    UFUNCTION(BlueprintCallable, Category = "Health")
-    void RestoreFully();
 
     /** Set max values and optionally reset current values to the new maxes */
     UFUNCTION(BlueprintCallable, Category = "Health")
@@ -93,17 +82,19 @@ public:
     FTimerHandle ShieldRegenDelayHandle;
     FTimerHandle ShieldRegenTickHandle;
 
+    /** how long it takes before shield starts regenerating */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health|Shield Regen")
     float ShieldRegenDelay = 5.f;
 
+    /** how long it takes shield to start regenerating once the shield has broken */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health|Shield Regen")
     float ShieldBreakRegenDelay = 8.f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health|Shield Regen")
-    float ShieldRegenRate = 0.1f; // how often to regen
+    float ShieldRegenRate = 0.1f; // how fast it regens
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health|Shield Regen")
-    int ShieldRegenAmount = 1; // how much per tick
+    int ShieldRegenAmount = 1; // how much it regens per tick
 
     void StartShieldRegen();
     void RegenShieldTick();

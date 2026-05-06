@@ -22,6 +22,7 @@ void UHealth::BeginPlay()
 
 void UHealth::TakeDamage(int DamageAmount)
 {
+    //ignores 0 or invalid damage
     if (DamageAmount <= 0)
     {
         return;
@@ -33,10 +34,11 @@ void UHealth::TakeDamage(int DamageAmount)
     // Track whether shield was >0 before applying damage to detect shield break
     const bool bShieldWasPositive = (PrevShield > 0);
 
+    // Apply to shield first unless bypassing
     if (!bBypassShield && Shield > 0)
     {
-        // Apply to shield first
-        int32 DamageToShield = FMath::Min(Shield, DamageAmount);
+        // Damage to shield first (can't exceed current shield)
+        int DamageToShield = FMath::Min(Shield, DamageAmount);
         Shield -= DamageToShield;
         DamageAmount -= DamageToShield;
     }
@@ -59,38 +61,12 @@ void UHealth::TakeDamage(int DamageAmount)
     {
         DelayToUse = ShieldBreakRegenDelay;
     }
+    //Start regen delay timer
     GetWorld()->GetTimerManager().SetTimer(ShieldRegenDelayHandle, this, &UHealth::StartShieldRegen, DelayToUse, false);
 
     ClampAndBroadcast(PrevShield);
 }
 
-void UHealth::Heal(int HealAmount)
-{
-    if (HealAmount <= 0)
-    {
-        return;
-    }
-
-    Health += HealAmount;
-    Health = FMath::Clamp(Health, 0, MaxHealth);
-}
-
-void UHealth::RestoreShield(int ShieldAmount)
-{
-    if (ShieldAmount <= 0)
-    {
-        return;
-    }
-
-    Shield += ShieldAmount;
-    Shield = FMath::Clamp(Shield, 0, MaxShield);
-}
-
-void UHealth::RestoreFully()
-{
-    Health = MaxHealth;
-    Shield = MaxShield;
-}
 
 void UHealth::SetMaxValues(int NewMaxHealth, int NewMaxShield, bool bResetCurrent)
 {
@@ -111,18 +87,18 @@ void UHealth::SetMaxValues(int NewMaxHealth, int NewMaxShield, bool bResetCurren
 
 void UHealth::ClampAndBroadcast(int PrevShield)
 {
-    // Clamp values
+    // Clamp values, ensure it stays in valid ranges
     Health = FMath::Clamp(Health, 0, MaxHealth);
     Shield = FMath::Clamp(Shield, 0, MaxShield);
 
-    // Shield broke: previously >0 and now == 0
+    // Check if shield broke (shield previously >0 and now 0)
     if (PrevShield > 0 && Shield == 0)
     {
         OnShieldBroke.Broadcast();
         UE_LOG(LogTemp, Log, TEXT("%s: Shield broke"), *GetOwner()->GetName());
     }
 
-    // Died: health reached zero
+    // Check for Death (health reached zero)
     if (Health == 0)
     {
         OnDied.Broadcast();
@@ -136,6 +112,8 @@ void UHealth::StartShieldRegen()
     if (Shield < MaxShield)
     {
         FTimerManager& TM = GetWorld()->GetTimerManager();
+        
+        //prevent duplicate regen timers
         if (!TM.IsTimerActive(ShieldRegenTickHandle))
         {
             // Broadcast that regen is starting
@@ -149,6 +127,7 @@ void UHealth::StartShieldRegen()
 
 void UHealth::RegenShieldTick()
 {
+    // Add shield and clamp to max
     Shield = FMath::Clamp(Shield + ShieldRegenAmount, 0, MaxShield);
 
     // Stop when full

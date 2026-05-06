@@ -49,6 +49,7 @@ AMGP_2526Character::AMGP_2526Character()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 	
+	// Health component
 	HealthComponent = CreateDefaultSubobject<UHealth>(TEXT("HealthComponent"));
 
 	// player Audio Component
@@ -73,10 +74,6 @@ void AMGP_2526Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMGP_2526Character::Look);
-	}
-	else
-	{
-		UE_LOG(LogMGP_2526, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
 	}
 }
 
@@ -144,7 +141,7 @@ void AMGP_2526Character::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Forward engine damage events to our handler
+	// Forward engine-level damage events to our handler
 	OnTakeAnyDamage.AddDynamic(this, &AMGP_2526Character::HandleAnyDamage);
 
 	// Bind health component events
@@ -161,6 +158,7 @@ void AMGP_2526Character::HandleAnyDamage(AActor* DamagedActor, float Damage,
 	const UDamageType* DamageType,
 	AController* InstigatedBy, AActor* DamageCauser)
 {
+	//converts float damage top int and forwards it to health component
 	if (HealthComponent && Damage > 0.f)
 	{
 		HealthComponent->TakeDamage(FMath::RoundToInt(Damage));
@@ -170,12 +168,14 @@ void AMGP_2526Character::HandleAnyDamage(AActor* DamagedActor, float Damage,
 void AMGP_2526Character::OnShieldBrokeHandler()
 {
 	UE_LOG(LogTemp, Warning, TEXT("%s: Shield broke"), *GetName());
+	
+	//play low health sound
 	if (AudioComponent && LowHealthSound)
 	{
 		AudioComponent->SetSound(LowHealthSound);
 		AudioComponent->Play();
 
-		//to test if this is being called (doesnt seem like it is)
+		//to test if this is being called
 		UE_LOG(LogTemp, Warning, TEXT("AudioComponent Valid: %s | Sound Valid: %s | IsPlaying: %s"),
 			AudioComponent ? TEXT("YES") : TEXT("NO"),
 			LowHealthSound ? TEXT("YES") : TEXT("NO"),
@@ -187,8 +187,10 @@ void AMGP_2526Character::OnDiedHandler()
 {
 	UE_LOG(LogTemp, Warning, TEXT("%s: Died"), *GetName());
 
+	//Disable movement
 	GetCharacterMovement()->DisableMovement();
 
+	//Disable player input
 	if (APlayerController* PC = Cast<APlayerController>(GetController()))
 	{
 		DisableInput(PC);
@@ -199,6 +201,7 @@ void AMGP_2526Character::OnShieldRegenStartedHandler()
 {
 	UE_LOG(LogTemp, Log, TEXT("%s: Shield regen started"), *GetName());
 
+	//plays shield regen sound
 	if (AudioComponent && ShieldRegenSound)
 	{
 		AudioComponent->Stop();
