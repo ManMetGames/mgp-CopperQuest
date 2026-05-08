@@ -4,6 +4,9 @@
 
 In order to run the game open the unreal file and click on MGP_2526.uproject file, press play at the top the unreal editor and walk into the damage cube to test the health mechanic.
 
+This is the link to my assignment video:
+https://mmutube.mmu.ac.uk/media/MGP_2526+Assignment+Bryan+Knak/1_6sq77d03
+
 I used various tutorial to assist in making this however many of which didn't do what i wanted it to.
 here is a list of some tutorials i watched:
 - https://www.youtube.com/watch?v=uWoFdJaBXCs&t=284s
